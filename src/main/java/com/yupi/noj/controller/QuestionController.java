@@ -10,10 +10,7 @@ import com.yupi.noj.common.ResultUtils;
 import com.yupi.noj.constant.UserConstant;
 import com.yupi.noj.exception.BusinessException;
 import com.yupi.noj.exception.ThrowUtils;
-import com.yupi.noj.model.dto.question.QuestionQueryRequest;
-import com.yupi.noj.model.dto.question.QuestionAddRequest;
-import com.yupi.noj.model.dto.question.QuestionEditRequest;
-import com.yupi.noj.model.dto.question.QuestionUpdateRequest;
+import com.yupi.noj.model.dto.question.*;
 import com.yupi.noj.model.entity.Post;
 import com.yupi.noj.model.entity.Question;
 import com.yupi.noj.model.entity.User;
@@ -45,23 +42,35 @@ public class QuestionController {
 
     public final static Gson GSON = new Gson();
 
+
+    /**
+     * 创建
+     * @param questionAddRequest
+     * @param  request
+     * @author xiaonaol
+     */
     @PostMapping("/add")
     public BaseResponse<Long> addQuestion(@RequestBody QuestionAddRequest questionAddRequest, HttpServletRequest request) {
         if (questionAddRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-
         Question question = new Question();
         BeanUtils.copyProperties(questionAddRequest, question);
         List<String> tags = questionAddRequest.getTags();
-        if (tags != null && !tags.isEmpty()) {
+        if (tags != null) {
             question.setTags(GSON.toJson(tags));
+        }
+        List<JudgeCase> judgeCases = questionAddRequest.getJudgeCase();
+        if (judgeCases != null) {
+            question.setJudgeCase(GSON.toJson(judgeCases));
+        }
+        JudgeConfig judgeConfig = questionAddRequest.getJudgeConfig();
+        if (judgeConfig != null) {
+            question.setJudgeConfig(GSON.toJson(judgeConfig));
         }
         questionService.validQuestion(question, true);
         User loginUser = userService.getLoginUser(request);
         question.setUserId(loginUser.getId());
-        question.setSubmitNum(0);
-        question.setAcceptedNum(0);
         question.setFavourNum(0);
         question.setThumbNum(0);
         boolean result = questionService.save(question);
@@ -70,6 +79,12 @@ public class QuestionController {
         return ResultUtils.success(newQuestionId);
     }
 
+    /**
+     * 删除
+     * @param questionDeleteRequest
+     * @param  request
+     * @author xiaonaol
+     */
     @PostMapping("/delete")
     public BaseResponse<Boolean> deleteQuestion(@RequestBody DeleteRequest questionDeleteRequest, HttpServletRequest request) {
         if (questionDeleteRequest == null || questionDeleteRequest.getId() <= 0) {
@@ -89,6 +104,12 @@ public class QuestionController {
         return ResultUtils.success(b);
     }
 
+    /**
+     * 更新（仅管理员）
+     * @param questionUpdateRequest
+     * @param  request
+     * @author xiaonaol
+     */
     @PostMapping("/update")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> updateQuestion(@RequestBody QuestionUpdateRequest questionUpdateRequest, HttpServletRequest request) {
@@ -103,6 +124,15 @@ public class QuestionController {
             question.setTags(GSON.toJson(tags));
         }
 
+        List<JudgeCase> judgeCases = questionUpdateRequest.getJudgeCase();
+        if (judgeCases != null) {
+            question.setJudgeCase(GSON.toJson(judgeCases));
+        }
+        List<JudgeConfig> judgeConfigs = questionUpdateRequest.getJudgeConfig();
+        if (judgeConfigs != null) {
+            question.setJudgeConfig(GSON.toJson(judgeConfigs));
+        }
+
         questionService.validQuestion(question, false);
         long id = questionUpdateRequest.getId();
 
@@ -112,8 +142,14 @@ public class QuestionController {
         return ResultUtils.success(result);
     }
 
+    /**
+     * 根据id获取VO
+     * @param id
+     * @param  request
+     * @author xiaonaol
+     */
     @GetMapping("/get/vo")
-    public BaseResponse<QuestionVO> getPostVOById(long id, HttpServletRequest request) {
+    public BaseResponse<QuestionVO> getQuestionVOById(long id, HttpServletRequest request) {
         if (id <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -124,8 +160,14 @@ public class QuestionController {
         return ResultUtils.success(questionService.getQuestionVO(question, request));
     }
 
+    /**
+     * 分页获取VO
+     * @param questionQueryRequest
+     * @param  request
+     * @author xiaonaol
+     */
     @PostMapping("/list/page/vo")
-    public BaseResponse<Page<QuestionVO>> listPostVOByPage(@RequestBody QuestionQueryRequest questionQueryRequest,
+    public BaseResponse<Page<QuestionVO>> listQuestionVOByPage(@RequestBody QuestionQueryRequest questionQueryRequest,
                                                        HttpServletRequest request) {
         long current = questionQueryRequest.getCurrent();
         long size = questionQueryRequest.getPageSize();
@@ -136,8 +178,14 @@ public class QuestionController {
         return ResultUtils.success(questionService.getQuestionVOPage(questionPage, request));
     }
 
+    /**
+     * 分页获取当前用户创建的QuestionVO
+     * @param questionQueryRequest
+     * @param  request
+     * @author xiaonaol
+     */
     @PostMapping("/my/list/page/vo")
-    public BaseResponse<Page<QuestionVO>> listMyPostVOByPage(@RequestBody QuestionQueryRequest questionQueryRequest,
+    public BaseResponse<Page<QuestionVO>> listMyQuestionVOByPage(@RequestBody QuestionQueryRequest questionQueryRequest,
                                                          HttpServletRequest request) {
         if (questionQueryRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -153,8 +201,14 @@ public class QuestionController {
         return ResultUtils.success(questionService.getQuestionVOPage(questionPage, request));
     }
 
+    /**
+     * 编辑
+     * @param questionEditRequest
+     * @param  request
+     * @author xiaonaol
+     */
     @PostMapping("/edit")
-    public BaseResponse<Boolean> editPost(@RequestBody QuestionEditRequest questionEditRequest, HttpServletRequest request) {
+    public BaseResponse<Boolean> editQuestion(@RequestBody QuestionEditRequest questionEditRequest, HttpServletRequest request) {
         if (questionEditRequest == null || questionEditRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }

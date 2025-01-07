@@ -6,6 +6,8 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
+ * 更新请求
+ *
  * @author xiaonaol
  * @date 2025/1/4
  **/
@@ -22,9 +24,9 @@ public class QuestionUpdateRequest implements Serializable {
 
     private String answer;
 
-    private String judgeCase;
+    private List<JudgeCase> judgeCase;
 
-    private String judgeConfig;
+    private List<JudgeConfig> judgeConfig;
 
     private static final long serialVersionUID = 1L;
 }

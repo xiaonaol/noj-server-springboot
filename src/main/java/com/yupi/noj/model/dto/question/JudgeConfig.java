@@ -10,9 +10,19 @@ import lombok.Data;
 @Data
 public class JudgeConfig {
 
+
+    /**
+     * 时间限制（ms）
+     */
     private Long timeLimit;
 
+    /**
+     * 内存限制（kb）
+     */
     private Long memoryLimit;
 
-    private String stackLimit;
+    /**
+     * 堆栈限制（kb）
+     */
+    private Long stackLimit;
 }

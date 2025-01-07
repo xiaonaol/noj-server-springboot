@@ -3,7 +3,7 @@ package com.yupi.noj.esdao;
 import com.yupi.noj.model.dto.post.PostEsDTO;
 import com.yupi.noj.model.dto.post.PostQueryRequest;
 import com.yupi.noj.model.entity.Post;
-import com.yupi.noj.service.PostService;
+
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -18,8 +18,7 @@ import org.springframework.data.domain.Sort;
 /**
  * 帖子 ES 操作测试
  *
- * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
- * @from <a href="https://yupi.icu">编程导航知识星球</a>
+
  */
 @SpringBootTest
 public class PostEsDaoTest {

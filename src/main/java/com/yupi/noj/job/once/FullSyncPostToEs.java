@@ -3,7 +3,7 @@ package com.yupi.noj.job.once;
 import com.yupi.noj.esdao.PostEsDao;
 import com.yupi.noj.model.dto.post.PostEsDTO;
 import com.yupi.noj.model.entity.Post;
-import com.yupi.noj.service.PostService;
+
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
@@ -14,8 +14,6 @@ import org.springframework.boot.CommandLineRunner;
 /**
  * 全量同步帖子到 es
  *
- * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
- * @from <a href="https://yupi.icu">编程导航知识星球</a>
  */
 // todo 取消注释开启任务
 //@Component

@@ -15,12 +15,24 @@ import javax.servlet.http.HttpServletRequest;
 * @createDate 2025-01-04 21:27:08
 */
 public interface QuestionService extends IService<Question> {
-    
+
+    /**
+     * 校验
+     */
     void validQuestion(Question question, boolean add);
 
+    /**
+     * 获取查询包装类
+     */
     QueryWrapper<Question> getQueryWrapper(QuestionQueryRequest questionQueryRequest);
 
-    QuestionVO getQuestionVO(Question Question, HttpServletRequest request);
+    /**
+     * 获取封装类
+     */
+    QuestionVO getQuestionVO(Question question, HttpServletRequest request);
 
-    Page<QuestionVO> getQuestionVOPage(Page<Question> QuestionPage, HttpServletRequest request);
+    /**
+     * 分页获取封装类
+     */
+    Page<QuestionVO> getQuestionVOPage(Page<Question> uestionPage, HttpServletRequest request);
 }

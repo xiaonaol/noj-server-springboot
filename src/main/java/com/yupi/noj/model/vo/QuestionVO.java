@@ -21,6 +21,10 @@ import static com.yupi.noj.controller.QuestionController.GSON;
  **/
 @Data
 public class QuestionVO implements Serializable {
+
+    /**
+     * id
+     */
     private Long id;
 
     /**
@@ -78,6 +82,10 @@ public class QuestionVO implements Serializable {
      */
     private Date updateTime;
 
+
+    /**
+     * 创建用户
+     */
     private UserVO userVO;
 
     private static final long serialVersionUID = 1L;
