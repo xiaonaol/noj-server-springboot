@@ -88,21 +88,22 @@ public class JudgeServiceImpl implements JudgeService {
         String judgeConfigStr = question.getJudgeConfig();
         List<JudgeCase> judgeCaseList = JSONUtil.toList(judgeConfigStr, JudgeCase.class);
         List<String> inputList = judgeCaseList.stream().map(JudgeCase::getInput).collect(Collectors.toList());
-        ExecuteCodeRequest executeCodeRequest = ExecuteCodeRequest().builder()
+        ExecuteCodeRequest executeCodeRequest = ExecuteCodeRequest.builder()
                 .code(code)
                 .language(language)
                 .inputList(inputList)
                 .build();
-        ExecuteCodeResponse executeCodeResponse = codeSandbox.executeCode(executeCodeRequest);
+        ExecuteCodeResponse executeCodeResponse = codeSandbox.executeCodeRequest(executeCodeRequest);
         List<String> outputList = executeCodeResponse.getOutputList();
+        JudgeInfo judgeInfo = executeCodeResponse.getJudgeInfo();
         
         JudgeContext judgeContext = new JudgeContext();
-        judgeContext.setJudgeInfo();
+        judgeContext.setJudgeInfo(judgeInfo);
         judgeContext.setInputList(inputList);
         judgeContext.setOutputList(outputList);
         judgeContext.setJudgeCaseList(judgeCaseList);
         judgeContext.setQuestion(question);
-        JudgeInfo judgeInfo = judgeManager.doJudge(judgeContext);
+        judgeInfo = judgeManager.doJudge(judgeContext);
 
         // 修改数据库中的判题结果
         questionSubmit.setId(questionSubmitId);

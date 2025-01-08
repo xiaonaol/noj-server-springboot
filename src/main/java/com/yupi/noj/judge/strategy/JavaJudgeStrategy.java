@@ -11,12 +11,13 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * 默认判题策略
+ * Java判题策略
  *
  * @author xiaonaol
  * @date 2025/1/8
  **/
-public class DefaultJudgeStrategy implements JudgeStrategy{
+public class JavaJudgeStrategy implements JudgeStrategy {
+
 
     /**
      * 执行判题
@@ -26,9 +27,6 @@ public class DefaultJudgeStrategy implements JudgeStrategy{
      */
     @Override
     public JudgeInfo doJudge(JudgeContext judgeContext) {
-
-        // todo 优化掉judgeInfoResponse，用judgeInfo代替
-
         JudgeInfo judgeInfo = judgeContext.getJudgeInfo();
         Long expectMemory = judgeInfo.getMemory();
         Long expectTime = judgeInfo.getTime();
