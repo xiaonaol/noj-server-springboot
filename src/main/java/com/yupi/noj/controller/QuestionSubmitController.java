@@ -25,8 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 题目提交接口
- *
-
  */
 @RestController
 @RequestMapping("/question_submit")

@@ -2,8 +2,6 @@ package com.yupi.noj.common;
 
 /**
  * 返回工具类
- *
-
  */
 public class ResultUtils {
 

@@ -2,8 +2,6 @@ package com.yupi.noj.common;
 
 /**
  * 自定义错误码
- *
-
  */
 public enum ErrorCode {
 
