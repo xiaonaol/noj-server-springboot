@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yupi.noj.common.ErrorCode;
 import com.yupi.noj.constant.CommonConstant;
 import com.yupi.noj.exception.BusinessException;
+import com.yupi.noj.judge.JudgeService;
 import com.yupi.noj.model.dto.questionsubmit.QuestionSubmitAddRequest;
 import com.yupi.noj.model.dto.questionsubmit.QuestionSubmitQueryRequest;
 import com.yupi.noj.model.entity.Question;
@@ -47,6 +48,9 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
     @Resource
     private UserService userService;
 
+    @Resource
+    private JudgeService judgeService;
+
     /**
      * 提交题目
      *
@@ -82,6 +86,8 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
         if (!save) {
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "提交题目失败");
         }
+
+        questionSubmit = judgeService.doJudge(questionSubmit.getId());
         return questionSubmit.getId();
     }
 

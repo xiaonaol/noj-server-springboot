@@ -4,7 +4,7 @@
 
 `SprngMVC` `SpringBoot` `MySQL` `swagger`
 
-## 目录
+## Content
 
 - [About](#about)
 - [Features](#features)
@@ -17,8 +17,8 @@
 
 ## Features
 
-- Quick and easy deployment
-- API documentation in swagger
+- Quick and easy [deployment]
+- [API documentation] in swagger
 - High extensibility
 - Distribution deployment support (haven't implement)
 - Support for custom user-define judge cases (haven't implement)
@@ -27,24 +27,21 @@
 
 ## Supported Languages
 
-| # | Name                  |
-|---|-----------------------|
-| 1 | C ()                  |
-| 2 | C++ ()                |
-| 3 | Java (OpenJDK 17.0.2) |
-| 4 | Go ()                 |
-|   |                       |
-|   |                       |
-
+| # | Name                    |
+|---|-------------------------|
+| 1 | `C ()`                  |
+| 2 | `C++ ()`                |
+| 3 | `Java (OpenJDK 17.0.2)` |
+| 4 | `Go ()`                 |
 
 ## References
 
 ## Author & Contributors
 
-NOJ is created and maintained by [xiaonaol](https://github.com/xiaonaol)
+NOJ is created and maintained by [xiaonaol](https://github.com/xiaonaol) now.
 
 <a href="https://github.com/xiaonaol">
-<img src="https://contributors-img.web.app/image?repo=xiaonaol/noj-server-springboot" />
+    <img src="https://contributors-img.web.app/image?repo=xiaonaol/noj-server-springboot"/>
 </a>
 
-I am looking forward to your contribution!
+I am looking forward to your contribution and issues!

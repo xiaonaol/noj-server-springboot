@@ -4,7 +4,7 @@ import com.yupi.noj.judge.strategy.DefaultJudgeStrategy;
 import com.yupi.noj.judge.strategy.JavaJudgeStrategy;
 import com.yupi.noj.judge.strategy.JudgeContext;
 import com.yupi.noj.judge.strategy.JudgeStrategy;
-import com.yupi.noj.model.dto.questionsubmit.JudgeInfo;
+import com.yupi.noj.judge.sandbox.model.JudgeInfo;
 import com.yupi.noj.model.entity.QuestionSubmit;
 
 /**
@@ -22,7 +22,7 @@ public class JudgeManager {
      * @param judgeContext
      * @author xiaonaol
      */
-    JudgeInfo doJudge(JudgeContext judgeContext) {
+     JudgeInfo doJudge(JudgeContext judgeContext) {
 
         QuestionSubmit questionSubmit = judgeContext.getQuestionSubmit();
         String language = questionSubmit.getLanguage();

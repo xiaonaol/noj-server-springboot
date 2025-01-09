@@ -5,6 +5,7 @@ import com.yupi.noj.common.BaseResponse;
 import com.yupi.noj.common.ErrorCode;
 import com.yupi.noj.common.ResultUtils;
 import com.yupi.noj.exception.BusinessException;
+import com.yupi.noj.judge.JudgeService;
 import com.yupi.noj.model.dto.question.QuestionQueryRequest;
 import com.yupi.noj.model.dto.questionsubmit.QuestionSubmitAddRequest;
 import com.yupi.noj.model.dto.questionsubmit.QuestionSubmitQueryRequest;
@@ -38,6 +39,9 @@ public class QuestionSubmitController {
     private QuestionService questionService;
 
     @Resource
+    private JudgeService judgeService;
+
+    @Resource
     private UserService userService;
 
     /**
@@ -56,6 +60,7 @@ public class QuestionSubmitController {
         // 登录才能提交
         final User loginUser = userService.getLoginUser(request);
         long result = questionSubmitService.doQuestionSubmit(questionSubmitAddRequest, loginUser);
+
         return ResultUtils.success(result);
     }
 
