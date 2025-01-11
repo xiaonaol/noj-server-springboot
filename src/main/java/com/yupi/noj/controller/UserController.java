@@ -77,7 +77,7 @@ public class UserController {
     /**
      * 用户登录
      *
-     * @param userLoginRequest
+     * @param userLoginRequest 登录请求
      * @param request
      * @return
      */
