@@ -13,13 +13,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CodeSandboxProxy implements CodeSandbox {
 
-    private CodeSandbox codeSandbox;
+    private final CodeSandbox codeSandbox;
 
     @Override
     public ExecuteCodeResponse executeCodeRequest(ExecuteCodeRequest executeCodeRequest) {
         log.info(executeCodeRequest.toString());
         ExecuteCodeResponse executeCodeResponse = codeSandbox.executeCodeRequest(executeCodeRequest);
         log.info(executeCodeResponse.toString());
-        return null;
+        return executeCodeResponse;
     }
 }

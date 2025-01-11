@@ -34,16 +34,13 @@ import java.util.stream.Collectors;
 public class JudgeServiceImpl implements JudgeService {
 
     @Resource
-    JudgeService judgeService;
+    private QuestionService questionService;
 
     @Resource
-    QuestionService questionService;
+    private QuestionSubmitService questionSubmitService;
 
     @Resource
-    QuestionSubmitService questionSubmitService;
-
-    @Resource
-    JudgeManager judgeManager;
+    private JudgeManager judgeManager;
 
     @Value("${codesandbox.type:example}")
     private String type;

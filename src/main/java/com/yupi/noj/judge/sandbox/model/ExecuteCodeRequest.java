@@ -1,6 +1,5 @@
 package com.yupi.noj.judge.sandbox.model;
 
-import com.yupi.noj.model.dto.question.JudgeConfig;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,6 +25,4 @@ public class ExecuteCodeRequest {
     private String code;
 
     private String language;
-
-    private JudgeConfig judgeConfig;
 }

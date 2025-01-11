@@ -23,11 +23,6 @@ public class ExecuteCodeResponse {
     private List<String> outputList;
 
     /**
-     * 语言
-     */
-    private String language;
-
-    /**
      * 接口信息
      */
     private String message;

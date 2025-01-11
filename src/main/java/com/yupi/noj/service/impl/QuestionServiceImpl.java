@@ -36,7 +36,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @Slf4j
-public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> implements QuestionService {
+public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
+        implements QuestionService {
 
     @Resource
     private UserService userService;

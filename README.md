@@ -1,5 +1,7 @@
 # NOJ (Onine Judge System)
 
+**DEVELOPING ...**
+
 基于鱼皮（https://github.com/liyupi ）的万能后端模板开发的OJ后端系统。
 
 `SprngMVC` `SpringBoot` `MySQL` `swagger`

@@ -25,7 +25,6 @@ public class ExampleCodeSandbox implements CodeSandbox {
         String language = executeCodeRequest.getLanguage();
 
         executeCodeResponse.setOutputList(inputList);
-        executeCodeResponse.setLanguage(language);
         executeCodeResponse.setMessage("测试执行");
         executeCodeResponse.setStatus(QuestionSubmitStatusEnum.SUCCEED.getValue());
         executeCodeResponse.setJudgeInfo(new JudgeInfo(JudgeInfoMessageEnum.ACCEPT.getText(), 100L, 100L));

@@ -6,6 +6,7 @@ import com.yupi.noj.judge.strategy.JudgeContext;
 import com.yupi.noj.judge.strategy.JudgeStrategy;
 import com.yupi.noj.judge.sandbox.model.JudgeInfo;
 import com.yupi.noj.model.entity.QuestionSubmit;
+import org.springframework.stereotype.Service;
 
 /**
  * 判题策略管理
@@ -13,8 +14,8 @@ import com.yupi.noj.model.entity.QuestionSubmit;
  * @author xiaonaol
  * @date 2025/1/8
  **/
+@Service
 public class JudgeManager {
-
 
     /**
      * 根据language执行判题
