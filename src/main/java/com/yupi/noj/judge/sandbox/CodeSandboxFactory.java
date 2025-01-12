@@ -15,8 +15,8 @@ public class CodeSandboxFactory {
     /**
      * 创建代码沙箱实例
      *
-     * @param type
-     * @return CodeSandbox
+     * @param type 沙箱类型
+     * @return 沙箱实现类
      * @author xiaonaol
      */
     // todo 可以尝试复用代码沙箱类

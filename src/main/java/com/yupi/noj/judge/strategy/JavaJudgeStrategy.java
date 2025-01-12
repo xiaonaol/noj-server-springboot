@@ -6,7 +6,11 @@ import com.yupi.noj.model.dto.question.JudgeConfig;
 import com.yupi.noj.judge.sandbox.model.JudgeInfo;
 import com.yupi.noj.model.entity.Question;
 import com.yupi.noj.model.enums.JudgeInfoMessageEnum;
+import com.yupi.noj.service.QuestionService;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.Objects;
 
@@ -17,7 +21,6 @@ import java.util.Objects;
  * @date 2025/1/8
  **/
 public class JavaJudgeStrategy implements JudgeStrategy {
-
 
     /**
      * 执行判题
@@ -33,7 +36,6 @@ public class JavaJudgeStrategy implements JudgeStrategy {
         List<String> inputList = judgeContext.getInputList();
         List<String> outputList = judgeContext.getOutputList();
         List<JudgeCase> judgeCaseList = judgeContext.getJudgeCaseList();
-        Question question = judgeContext.getQuestion();
         JudgeInfoMessageEnum judgeInfoMessageEnum = JudgeInfoMessageEnum.ACCEPT;
         JudgeInfo judgeInfoResponse = new JudgeInfo();
         judgeInfoResponse.setMemory(expectMemory);
@@ -53,6 +55,7 @@ public class JavaJudgeStrategy implements JudgeStrategy {
             }
         }
 
+        Question question = judgeContext.getQuestion();
         String judgeConfigStr = question.getJudgeConfig();
         JudgeConfig judgeConfig = JSONUtil.toBean(judgeConfigStr, JudgeConfig.class);
         Long memoryLimit = judgeConfig.getMemoryLimit();
@@ -70,6 +73,7 @@ public class JavaJudgeStrategy implements JudgeStrategy {
         }
 
         judgeInfoResponse.setMessage(judgeInfoMessageEnum.getValue());
+
         return judgeInfoResponse;
     }
 }

@@ -13,6 +13,7 @@ import com.yupi.noj.model.dto.question.JudgeCase;
 import com.yupi.noj.judge.sandbox.model.JudgeInfo;
 import com.yupi.noj.model.entity.Question;
 import com.yupi.noj.model.entity.QuestionSubmit;
+import com.yupi.noj.model.enums.JudgeInfoMessageEnum;
 import com.yupi.noj.model.enums.QuestionSubmitStatusEnum;
 import com.yupi.noj.service.QuestionService;
 import com.yupi.noj.service.QuestionSubmitService;
@@ -49,7 +50,7 @@ public class JudgeServiceImpl implements JudgeService {
     /**
      * 执行判题
      *
-     * @param questionSubmitId
+     * @param questionSubmitId 提交信息id
      * @author xiaonaol
      */
     @Override
@@ -58,10 +59,6 @@ public class JudgeServiceImpl implements JudgeService {
         QuestionSubmit questionSubmit = questionSubmitService.getById(questionSubmitId);
         if (questionSubmit == null) {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR, "提交信息不存在");
-        }
-        Question question = questionService.getById(questionSubmit.getQuestionId());
-        if (question == null) {
-            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR, "题目不存在");
         }
 
         // 更新提交状态
@@ -74,30 +71,43 @@ public class JudgeServiceImpl implements JudgeService {
             throw new BusinessException(ErrorCode.OPERATION_ERROR, "更新提交状态失败");
         }
 
+        Question question = questionService.getById(questionSubmit.getQuestionId());
+        if (question == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR, "题目不存在");
+        }
+
+        // todo 线程安全
+        question.submitNumbIncrement();
+        questionService.updateById(question);
+
+        // 获取语言对应的代码沙箱
         CodeSandbox codeSandbox = CodeSandboxFactory.newInstance(type);
         codeSandbox = new CodeSandboxProxy(codeSandbox);
         String code = questionSubmit.getCode();
         String language = questionSubmit.getLanguage();
         
         // 获取输入用例
-        String judgeConfigStr = question.getJudgeConfig();
-        List<JudgeCase> judgeCaseList = JSONUtil.toList(judgeConfigStr, JudgeCase.class);
+        String judgeCaseStr = question.getJudgeCase();
+        List<JudgeCase> judgeCaseList = JSONUtil.toList(judgeCaseStr, JudgeCase.class);
         List<String> inputList = judgeCaseList.stream().map(JudgeCase::getInput).collect(Collectors.toList());
         ExecuteCodeRequest executeCodeRequest = ExecuteCodeRequest.builder()
                 .code(code)
                 .language(language)
                 .inputList(inputList)
                 .build();
+        // 代码沙箱执行代码并返回响应
         ExecuteCodeResponse executeCodeResponse = codeSandbox.executeCodeRequest(executeCodeRequest);
         List<String> outputList = executeCodeResponse.getOutputList();
         JudgeInfo judgeInfo = executeCodeResponse.getJudgeInfo();
-        
+
+        // 执行判题策略
         JudgeContext judgeContext = new JudgeContext();
         judgeContext.setJudgeInfo(judgeInfo);
         judgeContext.setInputList(inputList);
         judgeContext.setOutputList(outputList);
         judgeContext.setJudgeCaseList(judgeCaseList);
         judgeContext.setQuestion(question);
+        judgeContext.setQuestionSubmit(questionSubmit);
         judgeInfo = judgeManager.doJudge(judgeContext);
 
         // 修改数据库中的判题结果
@@ -107,6 +117,15 @@ public class JudgeServiceImpl implements JudgeService {
         update = questionSubmitService.updateById(questionSubmit);
         if (!update) {
             throw new BusinessException(ErrorCode.OPERATION_ERROR, "提交状态更新失败");
+        }
+
+        // todo 通过数+1 线程安全
+        if (judgeInfo.getMessage().equals(JudgeInfoMessageEnum.ACCEPT.getValue())) {
+            question.acceptedNumIncrement();
+            boolean succeed = questionService.updateById(question);
+            if (!succeed) {
+                throw new BusinessException(ErrorCode.OPERATION_ERROR, "增加通过数失败");
+            }
         }
 
         return questionSubmit;

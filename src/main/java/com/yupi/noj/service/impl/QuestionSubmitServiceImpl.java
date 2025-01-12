@@ -24,14 +24,12 @@ import com.yupi.noj.utils.SqlUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.aop.framework.AopContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 /**
@@ -56,32 +54,35 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
     /**
      * 提交题目
      *
-     * @param questionSubmitAddRequest
-     * @param loginUser
+     * @param questionSubmitAddRequest 提交信息添加请求
+     * @param loginUser 登录用户信息
      * @return 提交记录id
      */
     @Override
     public long doQuestionSubmit(QuestionSubmitAddRequest questionSubmitAddRequest, User loginUser) {
 
+        // 检查语言是否合法
         String language = questionSubmitAddRequest.getLanguage();
         QuestionSubmitLanguageEnum languageEnum = QuestionSubmitLanguageEnum.getEnumByValue(language);
         if (languageEnum == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "编程语言错误");
         }
 
-        long questionId = questionSubmitAddRequest.getQuestionId();
         // 判断实体是否存在，根据类别获取实体
+        long questionId = questionSubmitAddRequest.getQuestionId();
         Question question = questionService.getById(questionId);
         if (question == null) {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
         }
         long userId = loginUser.getId();
+
         // 每个用户串行提交题目
         QuestionSubmit questionSubmit = new QuestionSubmit();
         questionSubmit.setUserId(userId);
         questionSubmit.setQuestionId(questionId);
         questionSubmit.setCode(questionSubmitAddRequest.getCode());
         questionSubmit.setLanguage(questionSubmitAddRequest.getLanguage());
+        // 设置初始状态
         questionSubmit.setStatus(QuestionSubmitStatusEnum.WAITING.getValue());
         questionSubmit.setJudgeInfo("{}");
         boolean save = this.save(questionSubmit);
@@ -89,7 +90,11 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "提交题目失败");
         }
 
-        questionSubmit = judgeService.doJudge(questionSubmit.getId());
+        // 执行判题服务
+        CompletableFuture.runAsync(() -> {
+            judgeService.doJudge(questionSubmit.getId());
+        });
+
         return questionSubmit.getId();
     }
 
@@ -97,8 +102,8 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
     /**
      * 获取查询包装类
      *
-     * @param questionSubmitQueryRequest
-     * @return QueryWrapper
+     * @param questionSubmitQueryRequest 提交信息查询请求
+     * @return 查询包装类
      * @author xiaonaol
      */
     @Override
@@ -132,8 +137,8 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
     /**
      * 获取题目提交VO
      *
-     * @param questionSubmit
-     * @param loginUser
+     * @param questionSubmit 提交信息
+     * @param loginUser 登录用户
      * @return QuestionSubmitVO
      * @author xiaonaol
      */
@@ -153,9 +158,9 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
     /**
      * 分页获取题目提交VO
      *
-     * @param questionSubmitPage
-     * @param loginUser
-     * @return Page
+     * @param questionSubmitPage 分页提交信息
+     * @param loginUser 登录用户信息
+     * @return 分页提交信息VO
      * @author xiaonaol
      */
     @Override

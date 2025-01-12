@@ -42,12 +42,12 @@ public class QuestionEditRequest implements Serializable {
     /**
      * 判题用例
      */
-    private String judgeCase;
+    private List<JudgeCase> judgeCase;
 
     /**
      * 判题设置
      */
-    private String judgeConfig;
+    private JudgeConfig judgeConfig;
 
     private static final long serialVersionUID = 1L;
 }

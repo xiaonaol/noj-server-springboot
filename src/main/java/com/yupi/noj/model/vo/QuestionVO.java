@@ -1,10 +1,7 @@
 package com.yupi.noj.model.vo;
 
 import cn.hutool.json.JSONUtil;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.google.gson.reflect.TypeToken;
 import com.yupi.noj.model.dto.question.JudgeConfig;
-import com.yupi.noj.model.entity.Post;
 import com.yupi.noj.model.entity.Question;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
@@ -12,8 +9,6 @@ import org.springframework.beans.BeanUtils;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-
-import static com.yupi.noj.controller.QuestionController.GSON;
 
 /**
  * @author xiaonaol

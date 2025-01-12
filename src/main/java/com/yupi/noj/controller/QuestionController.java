@@ -13,7 +13,6 @@ import com.yupi.noj.exception.ThrowUtils;
 import com.yupi.noj.model.dto.question.*;
 import com.yupi.noj.model.dto.questionsubmit.QuestionSubmitAddRequest;
 import com.yupi.noj.model.dto.questionsubmit.QuestionSubmitQueryRequest;
-import com.yupi.noj.model.entity.Post;
 import com.yupi.noj.model.entity.Question;
 import com.yupi.noj.model.entity.QuestionSubmit;
 import com.yupi.noj.model.entity.User;
@@ -50,8 +49,8 @@ public class QuestionController {
     @Resource
     private QuestionSubmitService questionSubmitService;
 
+    // todo 换成JSONUtil
     public final static Gson GSON = new Gson();
-
 
     /**
      * 创建
@@ -60,7 +59,8 @@ public class QuestionController {
      * @author xiaonaol
      */
     @PostMapping("/add")
-    public BaseResponse<Long> addQuestion(@RequestBody QuestionAddRequest questionAddRequest, HttpServletRequest request) {
+    public BaseResponse<Long> addQuestion(@RequestBody QuestionAddRequest questionAddRequest,
+                                          HttpServletRequest request) {
         if (questionAddRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -96,7 +96,8 @@ public class QuestionController {
      * @author xiaonaol
      */
     @PostMapping("/delete")
-    public BaseResponse<Boolean> deleteQuestion(@RequestBody DeleteRequest questionDeleteRequest, HttpServletRequest request) {
+    public BaseResponse<Boolean> deleteQuestion(@RequestBody DeleteRequest questionDeleteRequest,
+                                                HttpServletRequest request) {
         if (questionDeleteRequest == null || questionDeleteRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -122,7 +123,8 @@ public class QuestionController {
      */
     @PostMapping("/update")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Boolean> updateQuestion(@RequestBody QuestionUpdateRequest questionUpdateRequest, HttpServletRequest request) {
+    public BaseResponse<Boolean> updateQuestion(@RequestBody QuestionUpdateRequest questionUpdateRequest,
+                                                HttpServletRequest request) {
         if (questionUpdateRequest == null || questionUpdateRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -218,8 +220,9 @@ public class QuestionController {
      * @author xiaonaol
      */
     @PostMapping("/edit")
-    public BaseResponse<Boolean> editQuestion(@RequestBody QuestionEditRequest questionEditRequest, HttpServletRequest request) {
-        if (questionEditRequest == null || questionEditRequest.getId() <= 0) {
+    public BaseResponse<Boolean> editQuestion(@RequestBody QuestionEditRequest questionEditRequest,
+                                              HttpServletRequest request) {
+        if (questionEditRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         Question question = new Question();
@@ -231,9 +234,9 @@ public class QuestionController {
         // 参数校验
         questionService.validQuestion(question, false);
         User loginUser = userService.getLoginUser(request);
-        long id = questionEditRequest.getId();
+        long questionId = questionEditRequest.getId();
         // 判断是否存在
-        Question oldQuestion = questionService.getById(id);
+        Question oldQuestion = questionService.getById(questionId);
         ThrowUtils.throwIf(oldQuestion == null, ErrorCode.NOT_FOUND_ERROR);
         // 仅本人或管理员可编辑
         if (!oldQuestion.getUserId().equals(loginUser.getId()) && !userService.isAdmin(loginUser)) {
@@ -272,8 +275,8 @@ public class QuestionController {
      * @author xiaonaol
      */
     @PostMapping("/question_submit/list/page")
-    public BaseResponse<Page<QuestionSubmitVO>> listQuestionSubmitByPage(@RequestBody QuestionSubmitQueryRequest questionSubmitQueryRequest,
-                                                                         HttpServletRequest request) {
+    public BaseResponse<Page<QuestionSubmitVO>> listQuestionSubmitByPage(
+            @RequestBody QuestionSubmitQueryRequest questionSubmitQueryRequest, HttpServletRequest request) {
         long current = questionSubmitQueryRequest.getCurrent();
         long size = questionSubmitQueryRequest.getPageSize();
         // 原始数据信息
